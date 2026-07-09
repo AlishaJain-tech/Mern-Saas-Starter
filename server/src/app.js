@@ -4,6 +4,8 @@ import helmet from 'helmet';
 import morgan from 'morgan';
 import config from './config/index.js';
 import healthRoutes from './routes/health.routes.js';
+import tenantRoutes from './routes/tenant.routes.js';
+import userRoutes from './routes/user.routes.js';
 import errorHandler from './middlewares/errorHandler.js';
 
 const app = express();
@@ -25,6 +27,8 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.use('/api/v1/health', healthRoutes);
+app.use('/api/tenants', tenantRoutes);
+app.use('/api/users', userRoutes);
 
 app.use(errorHandler);
 
