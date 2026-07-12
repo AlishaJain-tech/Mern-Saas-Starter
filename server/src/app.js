@@ -6,6 +6,7 @@ import config from './config/index.js';
 import healthRoutes from './routes/health.routes.js';
 import tenantRoutes from './routes/tenant.routes.js';
 import userRoutes from './routes/user.routes.js';
+import authRoutes from './routes/auth.routes.js';
 import errorHandler from './middlewares/errorHandler.js';
 
 const app = express();
@@ -29,6 +30,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use('/api/v1/health', healthRoutes);
 app.use('/api/tenants', tenantRoutes);
 app.use('/api/users', userRoutes);
+app.use('/api/auth', authRoutes);
 
 app.use(errorHandler);
 
