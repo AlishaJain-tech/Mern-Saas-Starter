@@ -135,3 +135,33 @@ export const login = asyncHandler(async (req, res, next) => {
     },
   });
 });
+ 
+// @desc    Get the currently logged-in user's own info
+// @route   GET /api/auth/me
+// @access  Private (requires a valid token — see protect middleware)
+//
+// This exists mainly to PROVE the protect middleware works: if you can
+// reach this route and see your own data, your token was successfully
+// verified and req.user was correctly attached.
+export const getMe = asyncHandler(async (req, res) => {
+  // req.user was attached by the protect middleware — no DB lookup
+  // needed here, it's already done for us.
+  const user = await req.user.populate("tenant");
+ 
+  res.status(200).json({
+    success: true,
+    data: {
+      user: {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+      },
+      tenant: {
+        id: user.tenant._id,
+        name: user.tenant.name,
+        slug: user.tenant.slug,
+      },
+    },
+  });
+});
