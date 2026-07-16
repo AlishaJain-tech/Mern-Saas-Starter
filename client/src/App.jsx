@@ -1,16 +1,17 @@
 import AppRoutes from "./routes/AppRoutes.jsx";
+import { AuthProvider } from "./contexts/AuthContext.jsx";
 
 // App.jsx is the single root component of the application.
-// Right now it just renders the route tree, but this is also
-// where GLOBAL, app-wide providers will wrap everything later —
-// e.g. <AuthProvider>, <TenantProvider>, a toast notification
-// provider, etc. Keeping it as a thin wrapper now makes it easy
-// to add those later without restructuring anything.
+// AuthProvider wraps EVERYTHING so that any component, anywhere in the
+// tree — a page, a layout, a deeply nested component — can call
+// useAuth() and know who's logged in, without prop-drilling.
 function App() {
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-900">
-      <AppRoutes />
-    </div>
+    <AuthProvider>
+      <div className="min-h-screen bg-slate-50 text-slate-900">
+        <AppRoutes />
+      </div>
+    </AuthProvider>
   );
 }
 

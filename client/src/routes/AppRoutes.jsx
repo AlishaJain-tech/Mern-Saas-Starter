@@ -1,7 +1,10 @@
 import { Routes, Route } from "react-router-dom";
 import PublicLayout from "../layouts/PublicLayout.jsx";
 import DashboardLayout from "../layouts/DashboardLayout.jsx";
+import ProtectedRoute from "./ProtectedRoute.jsx";
 import Home from "../pages/Home.jsx";
+import Login from "../pages/Login.jsx";
+import Register from "../pages/Register.jsx";
 import Dashboard from "../pages/Dashboard.jsx";
 
 // Centralizing all route definitions here (instead of scattering them
@@ -16,13 +19,23 @@ import Dashboard from "../pages/Dashboard.jsx";
 const AppRoutes = () => {
   return (
     <Routes>
-      {/* Public-facing routes (landing page, later: login/signup) */}
+      {/* Public-facing routes — landing page, login, and register */}
       <Route element={<PublicLayout />}>
         <Route path="/" element={<Home />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
       </Route>
 
-      {/* Authenticated app routes (later: protected by auth middleware) */}
-      <Route element={<DashboardLayout />}>
+      {/* Authenticated app routes. ProtectedRoute checks AuthContext
+          BEFORE DashboardLayout even renders — if there's no logged-in
+          user, it redirects to /login instead. */}
+      <Route
+        element={
+          <ProtectedRoute>
+            <DashboardLayout />
+          </ProtectedRoute>
+        }
+      >
         <Route path="/dashboard" element={<Dashboard />} />
       </Route>
     </Routes>

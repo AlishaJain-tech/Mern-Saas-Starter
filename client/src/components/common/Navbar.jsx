@@ -1,7 +1,17 @@
-// Navbar is also "dumb" — it receives an `onMenuClick` callback to open
-// the sidebar on mobile, but doesn't manage any state itself. This keeps
-// it simple and easy to reuse or restyle later without touching logic.
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../contexts/AuthContext.jsx";
+
+// Navbar now reads the logged-in user directly from AuthContext via
+// useAuth() — no need to pass user data down as props from every parent.
 const Navbar = ({ onMenuClick }) => {
+  const { user, logout } = useAuth();
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    logout();
+    navigate("/login");
+  };
+
   return (
     <header className="h-16 flex items-center justify-between px-4 md:px-6 bg-white border-b border-slate-200 shrink-0">
       <div className="flex items-center gap-3">
@@ -32,10 +42,21 @@ const Navbar = ({ onMenuClick }) => {
         <h1 className="text-base font-semibold text-slate-800">Dashboard</h1>
       </div>
 
-      {/* Placeholder for a real user menu / avatar dropdown later */}
       <div className="flex items-center gap-3">
+        <span className="text-sm text-slate-600 hidden sm:block">
+          {user?.name}
+        </span>
+
+        <button
+          type="button"
+          onClick={handleLogout}
+          className="text-sm font-medium text-slate-600 hover:text-slate-900 transition-colors"
+        >
+          Log out
+        </button>
+
         <div className="h-9 w-9 rounded-full bg-brand-accent flex items-center justify-center text-sm font-semibold text-white">
-          U
+          {user?.name?.charAt(0).toUpperCase() || "U"}
         </div>
       </div>
     </header>
