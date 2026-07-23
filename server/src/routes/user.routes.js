@@ -6,11 +6,22 @@ import {
   updateUser,
   deleteUser,
 } from "../controllers/user.controller.js";
+import protect from "../middlewares/auth.middleware.js";
+import authorize from "../middlewares/authorize.js";
 
 const router = express.Router();
 
-router.route("/").post(createUser).get(getUsers);
+// Every route requires login. Creating, updating, and deleting
+// teammates is admin-only — regular members can only view.
+router
+  .route("/")
+  .post(protect, authorize("admin"), createUser)
+  .get(protect, getUsers);
 
-router.route("/:id").get(getUserById).put(updateUser).delete(deleteUser);
+router
+  .route("/:id")
+  .get(protect, getUserById)
+  .put(protect, authorize("admin"), updateUser)
+  .delete(protect, authorize("admin"), deleteUser);
 
 export default router;
