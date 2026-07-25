@@ -9,7 +9,7 @@ import useToggle from "../hooks/useToggle.js";
 //   ┌─────────────┬───────────────────────┐
 //   │             │        Navbar         │
 //   │   Sidebar   ├───────────────────────┤
-//   │             │     Main Content      │
+//   │             │     Main Content      |
 //   │             │      (<Outlet />)     │
 //   └─────────────┴───────────────────────┘
 //

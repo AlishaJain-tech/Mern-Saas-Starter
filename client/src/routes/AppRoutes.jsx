@@ -6,6 +6,8 @@ import Home from "../pages/Home.jsx";
 import Login from "../pages/Login.jsx";
 import Register from "../pages/Register.jsx";
 import Dashboard from "../pages/Dashboard.jsx";
+import Projects from "../pages/Projects.jsx";
+import ProjectDetail from "../pages/ProjectDetail.jsx";
 
 // Centralizing all route definitions here (instead of scattering them
 // across App.jsx or individual components) means there is exactly ONE
@@ -37,6 +39,8 @@ const AppRoutes = () => {
         }
       >
         <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/dashboard/projects" element={<Projects />} />
+        <Route path="/dashboard/projects/:id" element={<ProjectDetail />} />
       </Route>
     </Routes>
   );

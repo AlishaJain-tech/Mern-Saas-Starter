@@ -1,12 +1,11 @@
 import { Link } from "react-router-dom";
 
-// Placeholder nav items — these will become real, permission-aware
-// links once auth and tenant features exist. For now they just show
-// the shape of a typical SaaS sidebar.
+// "Projects" is now a real link. Team/Settings stay placeholders until
+// those features are built — same pattern, just not built yet.
 const navItems = [
   { label: "Overview", to: "/dashboard" },
-  { label: "Tenants", to: "#" },
-  { label: "Users", to: "#" },
+  { label: "Projects", to: "/dashboard/projects" },
+  { label: "Team", to: "#" },
   { label: "Settings", to: "#" },
 ];
 
