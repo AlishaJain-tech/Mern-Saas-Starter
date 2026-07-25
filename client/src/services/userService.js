@@ -1,11 +1,14 @@
 import apiService from "./apiService.js";
 
-// Only what's needed right now: fetching the current tenant's team
-// members, used to populate the "assign task to" dropdown. More
-// user-management functions (invite, update, remove) can be added here
-// later without touching anything that already uses this file.
+// Fetching the team, inviting a new teammate, and removing one — all
+// the User-related calls the Team page needs. Note: `create` and
+// `delete` will 403 on the backend if the logged-in user isn't an
+// admin — the frontend just surfaces whatever the backend says rather
+// than trying to duplicate that permission logic itself.
 const userService = {
   getAll: () => apiService.get("/users"),
+  create: (data) => apiService.post("/users", data),
+  delete: (id) => apiService.delete(`/users/${id}`),
 };
 
 export default userService;

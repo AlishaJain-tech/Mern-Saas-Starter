@@ -8,6 +8,8 @@ import Register from "../pages/Register.jsx";
 import Dashboard from "../pages/Dashboard.jsx";
 import Projects from "../pages/Projects.jsx";
 import ProjectDetail from "../pages/ProjectDetail.jsx";
+import Team from "../pages/Team.jsx";
+import Settings from "../pages/Settings.jsx";
 
 // Centralizing all route definitions here (instead of scattering them
 // across App.jsx or individual components) means there is exactly ONE
@@ -41,6 +43,8 @@ const AppRoutes = () => {
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/dashboard/projects" element={<Projects />} />
         <Route path="/dashboard/projects/:id" element={<ProjectDetail />} />
+        <Route path="/dashboard/team" element={<Team />} />
+        <Route path="/dashboard/settings" element={<Settings />} />
       </Route>
     </Routes>
   );

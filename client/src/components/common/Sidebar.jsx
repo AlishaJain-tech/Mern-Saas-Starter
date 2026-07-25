@@ -1,12 +1,11 @@
 import { Link } from "react-router-dom";
 
-// "Projects" is now a real link. Team/Settings stay placeholders until
-// those features are built — same pattern, just not built yet.
+// All four nav items are now real, working links.
 const navItems = [
   { label: "Overview", to: "/dashboard" },
   { label: "Projects", to: "/dashboard/projects" },
-  { label: "Team", to: "#" },
-  { label: "Settings", to: "#" },
+  { label: "Team", to: "/dashboard/team" },
+  { label: "Settings", to: "/dashboard/settings" },
 ];
 
 // Sidebar is "dumb" — it doesn't own its open/closed state, it just
