@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useAuth } from "../contexts/AuthContext.jsx";
 import tenantService from "../services/tenantService.js";
 import Button from "../components/ui/Button.jsx";
+import Spinner from "../components/ui/Spinner.jsx";
 
 const Settings = () => {
   const { user } = useAuth();
@@ -51,7 +52,11 @@ const Settings = () => {
   };
 
   if (isLoading) {
-    return <p className="text-sm text-slate-500">Loading settings...</p>;
+    return (
+      <div className="flex items-center justify-center py-12">
+        <Spinner size="lg" />
+      </div>
+    );
   }
 
   if (!tenant) {

@@ -4,7 +4,10 @@ import projectService from "../services/projectService.js";
 import taskService from "../services/taskService.js";
 import userService from "../services/userService.js";
 import aiService from "../services/aiService.js";
+import { useToast } from "../contexts/ToastContext.jsx";
 import Button from "../components/ui/Button.jsx";
+import Spinner from "../components/ui/Spinner.jsx";
+import EmptyState from "../components/ui/EmptyState.jsx";
 
 const STATUS_OPTIONS = ["todo", "in-progress", "done"];
 const PRIORITY_STYLES = {
@@ -14,6 +17,7 @@ const PRIORITY_STYLES = {
 };
 
 const ProjectDetail = () => {
+  const { showToast } = useToast();
   // :id here matches the "/dashboard/projects/:id" route we're about
   // to add — this is the PROJECT's id, which every taskService call
   // below needs as its first argument.
@@ -101,6 +105,7 @@ const ProjectDetail = () => {
         assignedTo: "",
       });
       setShowForm(false);
+      showToast("Task created");
       fetchData();
     } catch (err) {
       setError(err.response?.data?.message || "Failed to create task.");
@@ -118,6 +123,7 @@ const ProjectDetail = () => {
       fetchData();
     } catch (err) {
       setError(err.response?.data?.message || "Failed to update task.");
+      showToast("Failed to update task", "error");
     }
   };
 
@@ -163,14 +169,20 @@ const ProjectDetail = () => {
 
     try {
       await taskService.delete(projectId, taskId);
+      showToast("Task deleted");
       fetchData();
     } catch (err) {
       setError(err.response?.data?.message || "Failed to delete task.");
+      showToast("Failed to delete task", "error");
     }
   };
 
   if (isLoading) {
-    return <p className="text-sm text-slate-500">Loading project...</p>;
+    return (
+      <div className="flex items-center justify-center py-12">
+        <Spinner size="lg" />
+      </div>
+    );
   }
 
   if (!project) {
@@ -325,7 +337,11 @@ const ProjectDetail = () => {
       {error && <p className="text-sm text-red-600 mb-4">{error}</p>}
 
       {tasks.length === 0 ? (
-        <p className="text-sm text-slate-500">No tasks yet. Create the first one above.</p>
+        <EmptyState
+          title="No tasks yet"
+          description="Create the first task to start tracking work on this project."
+          action={<Button onClick={() => setShowForm(true)}>New Task</Button>}
+        />
       ) : (
         <div className="space-y-3">
           {tasks.map((task) => (

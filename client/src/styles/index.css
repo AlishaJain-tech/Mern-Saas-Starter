@@ -1,5 +1,12 @@
+/* Tailwind v4: a single import replaces the old @tailwind base/components/utilities directives */
 @import "tailwindcss";
 
+/*
+  Custom design tokens for this SaaS app.
+  Defining them here (instead of hardcoding hex codes everywhere)
+  means the whole app's look can be changed by editing these two lines.
+  Usage in Tailwind classes: bg-brand-dark, text-brand-accent, etc.
+*/
 @theme {
   --color-brand-dark: #1e1b4b;
   --color-brand-dark-hover: #171442;
@@ -12,4 +19,17 @@ body {
     system-ui,
     -apple-system,
     sans-serif;
+}
+
+/* Used by the toast notifications (ToastContext.jsx) — a small slide-up
+   + fade-in so new toasts don't just abruptly pop into existence. */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }

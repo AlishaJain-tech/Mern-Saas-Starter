@@ -10,6 +10,7 @@ import Projects from "../pages/Projects.jsx";
 import ProjectDetail from "../pages/ProjectDetail.jsx";
 import Team from "../pages/Team.jsx";
 import Settings from "../pages/Settings.jsx";
+import NotFound from "../pages/NotFound.jsx";
 
 // Centralizing all route definitions here (instead of scattering them
 // across App.jsx or individual components) means there is exactly ONE
@@ -46,6 +47,11 @@ const AppRoutes = () => {
         <Route path="/dashboard/team" element={<Team />} />
         <Route path="/dashboard/settings" element={<Settings />} />
       </Route>
+
+      {/* Catch-all: any URL that matched NOTHING above lands here.
+          Must be the LAST route — React Router checks routes in order,
+          and "*" matches literally anything. */}
+      <Route path="*" element={<NotFound />} />
     </Routes>
   );
 };

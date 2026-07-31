@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useAuth } from "../contexts/AuthContext.jsx";
 import userService from "../services/userService.js";
 import Button from "../components/ui/Button.jsx";
+import Spinner from "../components/ui/Spinner.jsx";
 
 const Team = () => {
   // We need to know the CURRENT user's role and id — role decides
@@ -145,7 +146,9 @@ const Team = () => {
       {error && <p className="text-sm text-red-600 mb-4">{error}</p>}
 
       {isLoading ? (
-        <p className="text-sm text-slate-500">Loading team...</p>
+        <div className="flex items-center justify-center py-12">
+          <Spinner size="lg" />
+        </div>
       ) : (
         <div className="bg-white border border-slate-200 rounded-lg divide-y divide-slate-200">
           {members.map((member) => (

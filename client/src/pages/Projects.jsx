@@ -1,9 +1,13 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import projectService from "../services/projectService.js";
+import { useToast } from "../contexts/ToastContext.jsx";
 import Button from "../components/ui/Button.jsx";
+import Spinner from "../components/ui/Spinner.jsx";
+import EmptyState from "../components/ui/EmptyState.jsx";
 
 const Projects = () => {
+  const { showToast } = useToast();
   const [projects, setProjects] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState("");
@@ -46,6 +50,7 @@ const Projects = () => {
       await projectService.create(formData);
       setFormData({ name: "", description: "" });
       setShowForm(false);
+      showToast("Project created");
       fetchProjects();
     } catch (err) {
       setError(err.response?.data?.message || "Failed to create project.");
@@ -64,11 +69,13 @@ const Projects = () => {
 
     try {
       await projectService.delete(id);
+      showToast("Project deleted");
       fetchProjects();
     } catch (err) {
       // Most likely a 403 if you're not the creator/admin — the backend
       // enforces this, the frontend just surfaces whatever it says.
       setError(err.response?.data?.message || "Failed to delete project.");
+      showToast("Failed to delete project", "error");
     }
   };
 
@@ -127,11 +134,15 @@ const Projects = () => {
       {error && <p className="text-sm text-red-600 mb-4">{error}</p>}
 
       {isLoading ? (
-        <p className="text-sm text-slate-500">Loading projects...</p>
+        <div className="flex items-center justify-center py-12">
+          <Spinner size="lg" />
+        </div>
       ) : projects.length === 0 ? (
-        <p className="text-sm text-slate-500">
-          No projects yet. Create your first one above.
-        </p>
+        <EmptyState
+          title="No projects yet"
+          description="Create your first project to start organizing your team's work."
+          action={<Button onClick={() => setShowForm(true)}>New Project</Button>}
+        />
       ) : (
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {projects.map((project) => (
