@@ -3,6 +3,7 @@ import { useParams, Link } from "react-router-dom";
 import projectService from "../services/projectService.js";
 import taskService from "../services/taskService.js";
 import userService from "../services/userService.js";
+import aiService from "../services/aiService.js";
 import Button from "../components/ui/Button.jsx";
 
 const STATUS_OPTIONS = ["todo", "in-progress", "done"];
@@ -33,6 +34,19 @@ const ProjectDetail = () => {
     assignedTo: "",
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  // Separate loading state just for the "Generate with AI" button on
+  // the description field — distinct from isSubmitting (the whole form
+  // submit), since generating a description and submitting the task
+  // are two different actions that can each be in-flight independently.
+  const [isGeneratingDescription, setIsGeneratingDescription] = useState(false);
+
+  // State for the project-level AI summary panel — separate from
+  // everything else on the page, since it's fetched on-demand (only
+  // when the user clicks the button) rather than on page load.
+  const [summary, setSummary] = useState("");
+  const [isGeneratingSummary, setIsGeneratingSummary] = useState(false);
+  const [summaryError, setSummaryError] = useState("");
 
   // Loads everything this page needs in parallel — the project itself,
   // its tasks, and the team list for the assignment dropdown.
@@ -107,6 +121,43 @@ const ProjectDetail = () => {
     }
   };
 
+  // Uses whatever's currently typed in the title field to generate a
+  // description via Gemini, then fills the description field with it —
+  // the person can still edit it before submitting, this just saves
+  // them from writing it from scratch.
+  const handleGenerateDescription = async () => {
+    if (!formData.title.trim()) {
+      setError("Type a task title first, then generate a description.");
+      return;
+    }
+
+    setIsGeneratingDescription(true);
+    setError("");
+
+    try {
+      const res = await aiService.generateTaskDescription(formData.title);
+      setFormData((prev) => ({ ...prev, description: res.data.data.description }));
+    } catch (err) {
+      setError(err.response?.data?.message || "Failed to generate description.");
+    } finally {
+      setIsGeneratingDescription(false);
+    }
+  };
+
+  const handleGenerateSummary = async () => {
+    setIsGeneratingSummary(true);
+    setSummaryError("");
+
+    try {
+      const res = await aiService.generateProjectSummary(projectId);
+      setSummary(res.data.data.summary);
+    } catch (err) {
+      setSummaryError(err.response?.data?.message || "Failed to generate summary.");
+    } finally {
+      setIsGeneratingSummary(false);
+    }
+  };
+
   const handleDeleteTask = async (taskId) => {
     if (!window.confirm("Delete this task?")) return;
 
@@ -144,6 +195,35 @@ const ProjectDetail = () => {
         </Button>
       </div>
 
+      <div className="mb-6 p-4 bg-white border border-slate-200 rounded-lg">
+        <div className="flex items-center justify-between mb-2">
+          <h3 className="text-sm font-semibold text-slate-800">✨ AI Project Summary</h3>
+          <Button
+            variant="secondary"
+            onClick={handleGenerateSummary}
+            disabled={isGeneratingSummary}
+          >
+            {isGeneratingSummary
+              ? "Thinking..."
+              : summary
+                ? "Regenerate"
+                : "Generate Summary"}
+          </Button>
+        </div>
+
+        {summaryError && <p className="text-sm text-red-600">{summaryError}</p>}
+
+        {summary && !isGeneratingSummary && (
+          <p className="text-sm text-slate-600 leading-relaxed">{summary}</p>
+        )}
+
+        {!summary && !summaryError && !isGeneratingSummary && (
+          <p className="text-sm text-slate-400">
+            Get an AI-generated status summary of this project's tasks.
+          </p>
+        )}
+      </div>
+
       {showForm && (
         <form
           onSubmit={handleCreateTask}
@@ -164,9 +244,19 @@ const ProjectDetail = () => {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-slate-700 mb-1">
-              Description
-            </label>
+            <div className="flex items-center justify-between mb-1">
+              <label className="block text-sm font-medium text-slate-700">
+                Description
+              </label>
+              <button
+                type="button"
+                onClick={handleGenerateDescription}
+                disabled={isGeneratingDescription}
+                className="text-xs font-medium text-brand-dark hover:underline disabled:opacity-50"
+              >
+                {isGeneratingDescription ? "Generating..." : "✨ Generate with AI"}
+              </button>
+            </div>
             <textarea
               name="description"
               value={formData.description}
