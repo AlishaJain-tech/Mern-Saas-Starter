@@ -8,6 +8,7 @@ import dotenv from 'dotenv';
   nodeEnv: process.env.NODE_ENV || 'development',
   clientUrl: process.env.CLIENT_URL,
   jwtSecret: process.env.JWT_SECRET, // add this line
+  geminiApiKey:  process.env.GEMINI_API_KEY, 
 };
 
    export default config;
