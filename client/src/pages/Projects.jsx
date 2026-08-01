@@ -81,14 +81,14 @@ const Projects = () => {
 
   return (
     <div>
-      <div className="flex items-center justify-between mb-6">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-6">
         <div>
           <h2 className="text-xl font-semibold text-slate-900">Projects</h2>
           <p className="text-sm text-slate-500 mt-1">
             Organize your team's work into projects.
           </p>
         </div>
-        <Button onClick={() => setShowForm((prev) => !prev)}>
+        <Button onClick={() => setShowForm((prev) => !prev)} className="self-start sm:self-auto">
           {showForm ? "Cancel" : "New Project"}
         </Button>
       </div>

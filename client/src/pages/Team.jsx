@@ -75,7 +75,7 @@ const Team = () => {
 
   return (
     <div>
-      <div className="flex items-center justify-between mb-6">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-6">
         <div>
           <h2 className="text-xl font-semibold text-slate-900">Team</h2>
           <p className="text-sm text-slate-500 mt-1">
@@ -87,7 +87,10 @@ const Team = () => {
             never sees the button, even though the backend would also
             reject the request if they somehow tried. Belt and suspenders. */}
         {isAdmin && (
-          <Button onClick={() => setShowForm((prev) => !prev)}>
+          <Button
+            onClick={() => setShowForm((prev) => !prev)}
+            className="self-start sm:self-auto"
+          >
             {showForm ? "Cancel" : "Invite Teammate"}
           </Button>
         )}
@@ -152,13 +155,13 @@ const Team = () => {
       ) : (
         <div className="bg-white border border-slate-200 rounded-lg divide-y divide-slate-200">
           {members.map((member) => (
-            <div key={member._id} className="flex items-center justify-between px-4 py-3">
-              <div>
-                <p className="text-sm font-medium text-slate-900">{member.name}</p>
-                <p className="text-xs text-slate-500">{member.email}</p>
+            <div key={member._id} className="flex items-center justify-between gap-3 px-4 py-3">
+              <div className="min-w-0">
+                <p className="text-sm font-medium text-slate-900 truncate">{member.name}</p>
+                <p className="text-xs text-slate-500 truncate">{member.email}</p>
               </div>
 
-              <div className="flex items-center gap-3">
+              <div className="flex items-center gap-3 shrink-0">
                 <span className="text-xs font-medium px-2 py-1 rounded-full bg-slate-100 text-slate-600 capitalize">
                   {member.role}
                 </span>
