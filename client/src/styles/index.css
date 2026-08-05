@@ -21,15 +21,8 @@ body {
     sans-serif;
 }
 
-/* Used by the toast notifications (ToastContext.jsx) — a small slide-up
-   + fade-in so new toasts don't just abruptly pop into existence. */
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(4px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+/* Display face for headlines (Home.jsx hero) — paired deliberately
+   with Inter for body text, not the same family used everywhere. */
+.font-display {
+  font-family: "Space Grotesk", system-ui, sans-serif;
 }
